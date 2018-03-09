@@ -80,6 +80,7 @@ california_housing_dataframe = california_housing_dataframe.reindex(
 # 	gc.collect()
 # 	return str(b)
 
+
 def preprocess_features(california_housing_dataframe):
   """Prepares input features from California housing data set.
 
@@ -107,6 +108,7 @@ def preprocess_features(california_housing_dataframe):
 
   processed_features["distance_from_san_francisco"]=abs(california_housing_dataframe["latitude"]-38)
 
+  # processed_features['latitude_%d_to_%d' % r]=select_and_transform_features(california_housing_dataframe['latitude'])
   # processed_features["binning_values"]=binning(california_housing_dataframe["latitude"])
   return processed_features
 
@@ -415,6 +417,7 @@ def train_model(
 # 使用分箱：
 # 参考答案：
 # LATITUDE_RANGES = zip(xrange(32, 44), xrange(33, 45))				#xrange函数是python2的写法，在python3中用range来替代
+# LATITUDE_RANGES = zip(range(33, 44), range(34, 45)) 
 LATITUDE_RANGES = zip(range(32, 44), range(33, 45))					#range函数给的是一个区间，两个参数分别是区间的上下界(左闭右开)
 #zip函数的用法，参考http://www.runoob.com/python/python-func-zip.html
 
@@ -438,3 +441,9 @@ _ = train_model(
     training_targets=training_targets,
     validation_examples=selected_validation_examples,
     validation_targets=validation_targets)
+
+
+# debug日志：
+# 错误信息：ValueError: Feature latitude_32_to_33 is not in features dictionary.
+# 以上错误应该是因为在processed_features中没有对新的分箱特征进行定义，但是如果要在前面定义的话，又会遇到在定义之前就调用变量的问题。目前暂时没有想到解决方法。
+# 另外以上代码在Google的网页上是可以运行的，原因未知。。。
