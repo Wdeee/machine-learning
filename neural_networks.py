@@ -191,12 +191,13 @@ def train_nn_regression_model(
   steps_per_period = steps / periods
   
   # Create a linear regressor object.
-  my_optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate)
+  # my_optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate)
   my_optimizer = tf.contrib.estimator.clip_gradients_by_norm(my_optimizer, 5.0)
   # 还是一样，在这里使用神经网络,层数和节点数直接作为参数传递到DNNRegressor类：
   dnn_regressor = tf.estimator.DNNRegressor(
       feature_columns=construct_feature_columns(training_examples),
-      hidden_units=hidden_units
+      hidden_units=hidden_units,
+      optimizer=my_optimizer
   )
   
   # Create input functions
@@ -244,19 +245,19 @@ def train_nn_regression_model(
   print ("Model training finished.")
 
   # Output a graph of loss metrics over periods.
-  plt.ylabel("RMSE")
-  plt.xlabel("Periods")
-  plt.title("Root Mean Squared Error vs. Periods")
-  plt.tight_layout()
-  plt.plot(training_rmse, label="training")
-  plt.plot(validation_rmse, label="validation")
-  plt.legend()
-  plt.show()
+  # plt.ylabel("RMSE")
+  # plt.xlabel("Periods")
+  # plt.title("Root Mean Squared Error vs. Periods")
+  # plt.tight_layout()
+  # plt.plot(training_rmse, label="training")
+  # plt.plot(validation_rmse, label="validation")
+  # plt.legend()
+  # plt.show()
 
   print ("Final RMSE (on training data):   %0.2f" % training_root_mean_squared_error)
   print ("Final RMSE (on validation data): %0.2f" % validation_root_mean_squared_error)
 
-  return dnn_regressor
+  return dnn_regressor, training_rmse, validation_rmse
 
 
 # 任务 1：训练神经网络模型
